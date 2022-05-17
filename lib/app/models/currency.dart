@@ -16,8 +16,8 @@ class Currency {
       ),
       Currency(
         name: 'Dolar',
-        real: 1.0,
-        dolar: 5.00,
+        real: 5.0,
+        dolar: 1.00,
         euro: 0.94,
       ),
       Currency(

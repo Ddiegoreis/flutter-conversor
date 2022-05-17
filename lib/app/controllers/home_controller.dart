@@ -4,34 +4,32 @@ import 'package:flutter/cupertino.dart';
 class HomeController {
   List<Currency> currencies;
 
-  TextEditingController toCurrencyText;
-  TextEditingController fromCurrencyText;
+  final TextEditingController fromCurrencyText;
+  final TextEditingController toCurrencyText;
 
   Currency toCurrency;
   Currency fromCurrency;
 
-  HomeController() {
+  HomeController({this.toCurrencyText, this.fromCurrencyText}) {
     this.currencies = Currency.getCurrencyList();
 
-    this.toCurrencyText = TextEditingController();
-    this.fromCurrencyText = TextEditingController();
-
     this.toCurrency = currencies.first;
-    this.fromCurrency = currencies.last;
+    this.fromCurrency = currencies[1];
   }
 
   void convert() {
     double resultValue = 0;
 
     String toText = this.toCurrencyText.text;
-    double valueTo = double.tryParse(toText) ?? 1.0;
+    double valueTo = double.tryParse(toText.replaceAll(',', '.')) ?? 1.0;
 
-    if (fromCurrency.name == 'Real')
+    if (fromCurrency.name == 'Real') {
       resultValue = valueTo * toCurrency.real;
-    else if (fromCurrency.name == 'Dolar')
+    } else if (fromCurrency.name == 'Dolar') {
       resultValue = valueTo * toCurrency.dolar;
-    else if (fromCurrency.name == 'Euro')
+    } else if (fromCurrency.name == 'Euro') {
       resultValue = valueTo * toCurrency.euro;
+    }
 
     fromCurrencyText.text = resultValue.toStringAsFixed(2);
   }
