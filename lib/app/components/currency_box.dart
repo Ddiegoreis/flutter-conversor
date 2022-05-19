@@ -1,19 +1,19 @@
 import 'package:conversor_moeda/app/models/currency.dart';
 import 'package:flutter/material.dart';
 
-class CurrencyBox extends StatefulWidget {
-  final Function callback;
-  final String moedaSelecionada;
+class CurrencyBox extends StatelessWidget {
+  final void Function(Currency model) callback;
+  final Currency moedaSelecionada;
+  final List<Currency> currencies;
+  final TextEditingController textController;
 
-  const CurrencyBox({Key key, this.callback, this.moedaSelecionada})
+  const CurrencyBox(
+      {Key key,
+      this.callback,
+      this.moedaSelecionada,
+      this.currencies,
+      this.textController})
       : super(key: key);
-
-  @override
-  State<CurrencyBox> createState() => _CurrencyBoxState();
-}
-
-class _CurrencyBoxState extends State<CurrencyBox> {
-  List<String> currencyList = Currency.returnCurrencyNames();
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +24,18 @@ class _CurrencyBoxState extends State<CurrencyBox> {
           height: 56,
           child: Expanded(
             flex: 1,
-            child: DropdownButton(
+            child: DropdownButton<Currency>(
               iconEnabledColor: Colors.amber,
               underline: Container(
                 height: 1,
                 color: Colors.amber,
               ),
-              items: this.currencyList.map((String dropDownStringItem) {
-                return DropdownMenuItem<String>(
-                  value: dropDownStringItem,
-                  child: Text(dropDownStringItem),
-                );
-              }).toList(),
-              onChanged: widget.callback,
-              value: widget.moedaSelecionada,
+              items: this
+                  .currencies
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
+                  .toList(),
+              onChanged: this.callback,
+              value: this.moedaSelecionada,
             ),
           ),
         ),
@@ -47,6 +45,7 @@ class _CurrencyBoxState extends State<CurrencyBox> {
         Expanded(
           flex: 2,
           child: TextField(
+            controller: this.textController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               focusedBorder: UnderlineInputBorder(

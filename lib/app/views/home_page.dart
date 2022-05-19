@@ -1,27 +1,36 @@
 import 'package:conversor_moeda/app/components/currency_box.dart';
+import 'package:conversor_moeda/app/controllers/home_controller.dart';
 import 'package:conversor_moeda/app/models/currency.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({key}) : super(key: key);
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  String _fromCurrency = Currency.returnCurrencyNames().first;
-  String _toCurrency = Currency.returnCurrencyNames().last;
+  final TextEditingController toText = TextEditingController();
+  final TextEditingController fromText = TextEditingController();
 
-  void _alterFromCurrency(value) {
+  HomeController homeController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    this.homeController =
+        HomeController(toCurrencyText: toText, fromCurrencyText: fromText);
+  }
+
+  void _alterFromCurrency(Currency value) {
     setState(() {
-      this._fromCurrency = value;
+      this.homeController.fromCurrency = value;
     });
   }
 
-  void _alterToCurrency(value) {
+  void _alterToCurrency(Currency value) {
     setState(() {
-      this._toCurrency = value;
+      this.homeController.toCurrency = value;
     });
   }
 
@@ -44,12 +53,16 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     CurrencyBox(
-                      callback: _alterFromCurrency,
-                      moedaSelecionada: _fromCurrency,
+                      callback: _alterToCurrency,
+                      moedaSelecionada: homeController.toCurrency,
+                      currencies: homeController.currencies,
+                      textController: toText,
                     ),
                     CurrencyBox(
-                      callback: _alterToCurrency,
-                      moedaSelecionada: _toCurrency,
+                      callback: _alterFromCurrency,
+                      moedaSelecionada: homeController.fromCurrency,
+                      currencies: homeController.currencies,
+                      textController: fromText,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -60,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                           primary: Colors.amber.shade900,
                         ),
                         child: Text('Converter'),
-                        onPressed: () {},
+                        onPressed: () {
+                          homeController.convert();
+                        },
                       ),
                     ),
                   ],

@@ -28,8 +28,4 @@ class Currency {
       ),
     ];
   }
-
-  static List<String> returnCurrencyNames() {
-    return <String>['Real', 'Dolar', 'Euro'];
-  }
 }
